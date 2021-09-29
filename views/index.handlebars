@@ -1,0 +1,50 @@
+<div class="container">
+    <h1>Registration Number System</h1>
+    <p>FORMAT: ONLY TAKE PLATES FROM CAPE TOWN(CA) & PRETORIA(PA) & WORCESTER(WC).
+        eg. CA 123 456 Or CA 123-456 Or CA 1234 </p>
+    <span id="error"></span>
+    <div class="adjust">
+        <div class="section1">
+            <form action="/reg_numbers" method="POST">
+                <h3>Enter Plate:</h3>
+        </div>
+        <div>
+            <input type="text" name="inputBox" value="" placeholder="eg.CA 12345" class="plates">
+        </div>
+    </div>
+    <div>
+        <button class="button-primary add" type="submit" name="button"> <span>ADD</span></button>
+    </div>
+
+
+    <div class="f-group">
+        <label for="" class="title">Select from which Town</label>
+        <select name="slct1" id="slct1" class="slct1">
+            <option value="CA">Cape Town</option>
+            <option value="PA">Pretoria</option>
+            <option value="WC">Worcester</option>
+        </select>
+    </div>
+
+    <div class="lastbuttons">
+        <div class="buttons">
+            <button class="button-primary show" type="submit" name="button"> <span>SHOW</span></button>
+        </div>
+        <div class="buttons">
+            <button class="button-primary showAll" type="submit" name="button"> <span>SHOW_All</span></button>
+        </div>
+
+        <div class="buttons">
+            <button class="button-primary reset" type="submit" name="button"> <span>RESET</span></button>
+        </div>
+    </div>
+    </form>
+
+    <div>
+        <ul>
+            <li>{{output}}</li>
+        </ul>
+
+
+    </div>
+</div>

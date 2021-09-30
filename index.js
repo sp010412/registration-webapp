@@ -24,7 +24,7 @@ if (process.env.DATABASE_URL && !local) {
 }
 
 //which db connection to use
-const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/greetings';
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/registration_app';
 
 const pool = new Pool({
     connectionString,
@@ -63,13 +63,14 @@ app.post('/reg_numbers', async function (req, res) {
 
     try {
         var plateIn = req.body.inputBox;
+       // console.log(plateIn)
         await regInsta.regsIn(plateIn);
         var output = await regInsta.display();
 
-        // await regInsta.platesIn(plateIn);
-
+        await regInsta.platesIn(plateIn);
+        
         res.render('index', {
-            output: output
+            output: output,
         }
         );
     } catch (err) {
@@ -82,7 +83,7 @@ app.post('/reg_numbers', async function (req, res) {
 
 
 
-let PORT = process.env.PORT || 2021;
+let PORT = process.env.PORT || 2022;
 
 app.listen(PORT, function () {
     console.log('App starting on port', PORT);

@@ -26,15 +26,11 @@ module.exports = function registrationNumbers(existingPlates) {
 
             let plate = regIn;
             const db = await pool.query('SELECT registration_numbers FROM registrations WHERE registration_numbers = $1', [plate]);
-
             let chart = plate.substring(0, 2);
-          
             var townId = await pool.query('SELECT id FROM towns WHERE town_str = $1', [chart]);
-            //first checks if the parameter exist
 
-            if (db.rowCount === 0) {
-        
-                
+            //first checks if the parameter exist
+            if (db.rowCount === 0) {     
                 await pool.query('INSERT INTO registrations (registration_numbers, town_id) values ($1,$2)',[ plate, townId.rows[0].id]);
             }
             // else {

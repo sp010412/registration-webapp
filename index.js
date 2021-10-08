@@ -63,14 +63,11 @@ app.post('/reg_numbers', async function (req, res) {
 
     try {
         var plateIn = req.body.inputBox;
-       // console.log(plateIn)
         await regInsta.regsIn(plateIn);
-        var output = await regInsta.display();
-
+        var append = await regInsta.display();
         await regInsta.platesIn(plateIn);
-        
         res.render('index', {
-            output: output,
+            output: append,
         }
         );
     } catch (err) {
@@ -79,8 +76,29 @@ app.post('/reg_numbers', async function (req, res) {
 
 });
 
+app.post('/showButton', async function (req, res) {
+    var showFromTown = req.body.slct;
+    var list = await regInsta.findFromTown(showFromTown);
+
+    console.log(showFromTown)
+    console.log(list)
+    res.render('index', {
+        output: list
+    }
+    );
+});
 
 
+app.post('/showAllButton', async function (req, res) {
+    res.render('index', { output: await regInsta.allRegistrations() });
+});
+
+
+app.post('/resetButton', async function (req, res) {
+    // req.flash('infoIn', 'Database is successfully cleared!');
+    await regInsta.clearTable();
+    res.redirect('/');
+});
 
 
 let PORT = process.env.PORT || 2022;

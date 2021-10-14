@@ -1,62 +1,80 @@
-describe('Registration Exersice', function () {
-    it('it should get regstrations set', function () {
-        let tests = registrationNumbers()
-        tests.storePlates("CA 1534")
-        tests.storePlates("CA 1634")
-        tests.storePlates("CA 1734")
+const assert = require('assert');
+const registrationNumbers = require("../registration");
+const pg = require("pg");
+const Pool = pg.Pool;
 
-        assert.deepEqual(tests.getStorePlates(), ["CA 1534", "CA 1634", "CA 1734"]);
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:pg123@localhost:5432/registration_app';
+
+const pool = new Pool({
+    connectionString,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
+
+describe('Registration Exercise', async function () {
+    it('it should get all regstrations inserted from database', async function () {
+        
+
+        let tests = registrationNumbers(pool)
+        await tests. clearTable();
+        await tests.platesIn("CA 1534");
+        await tests.platesIn("PA 1734");
+
+        assert.deepEqual(await tests.allRegistrations(), [
+            { "registration_numbers": "CA 1534" },
+            {"registration_numbers": "PA 1734"}]);
     });
 
-    it('it should prevent duplication of regstrations from being added', function () {
-        let tests = registrationNumbers()
-        tests.storePlates("CA 7589")
-        tests.storePlates("CA 7888")
-        tests.storePlates("PA 7586")
-        tests.storePlates("WC 7852")
-        tests.storePlates("WC 7852")
+    it('it should not add duplicates of plates', async function () {
+        
 
-        assert.deepEqual(tests.getStorePlates(), ['CA 7589', 'CA 7888', 'PA 7586', 'WC 7852']);
+        let tests = registrationNumbers(pool)
+        await tests. clearTable();
+        await tests.platesIn("CA 1534");
+        await tests.platesIn("PA 1734");
+        await tests.platesIn("PA 1734");
+
+        assert.deepEqual(await tests.allRegistrations(), [
+            { "registration_numbers": "CA 1534" },
+            {"registration_numbers": "PA 1734"}]);
+    });
+    
+    it('it should return all the registration plates from Worcester', async function () {
+        
+        let tests = registrationNumbers(pool)
+        await tests. clearTable();
+        await tests.platesIn("CA 785-999");
+        await tests.platesIn("WC 1234");
+        await tests.platesIn("PA 1234");
+
+        assert.deepEqual(await tests.findFromTown('3'), [
+            { "registration_numbers": "WC 1234" }]);
     });
 
-    it('it should take in lower case letters and display in upperCase letters', function () {
-        let tests = registrationNumbers()
-        tests.storePlates("ca 7589")
-        tests.storePlates("ca 7888")
-        tests.storePlates("pa 7586")
-        tests.storePlates("wc 7852")
+    it('it should return all the registration plates from Cape Town', async function () {
+        
+        let tests = registrationNumbers(pool)
+        await tests. clearTable();
+        await tests.platesIn("CA 785-999");
+        await tests.platesIn("WC 1234");
+        await tests.platesIn("PA 1234");
 
-        assert.deepEqual(tests.getStorePlates(), ['CA 7589', 'CA 7888', 'PA 7586', 'WC 7852']);
+        assert.deepEqual(await tests.findFromTown('1'), [
+            { "registration_numbers": "CA 785-999" }]);
     });
 
-    it('it should return all the registration plates from Cape Town', function () {
-        let tests = registrationNumbers()
-        tests.storePlates("ca 7589")
-        tests.storePlates("CA 563-859")
-        tests.storePlates("pa 758 889")
-        tests.storePlates("wc 7852")
+    it('it should return all the registration plates from Pretoria', async function () {
+        
+        let tests = registrationNumbers(pool)
+        await tests. clearTable();
+        await tests.platesIn("CA 785-999");
+        await tests.platesIn("WC 1234");
+        await tests.platesIn("PA 1234");
 
-        assert.deepEqual(tests.filtered('CA'), ['CA 7589', 'CA 563-859']);
-    });
-
-    it('it should return all the registration plates from Pretoria', function () {
-        let tests = registrationNumbers()
-        tests.storePlates("ca 7589")
-        tests.storePlates("CA 563-859")
-        tests.storePlates("pa 758 889")
-        tests.storePlates("wc 7852")
-
-        assert.deepEqual(tests.filtered('PA'), ['PA 758 889']);
-    });
-
-    it('it should return all the registration plates from Worcester', function () {
-        let tests = registrationNumbers()
-        tests.storePlates("ca 7589")
-        tests.storePlates("CA 563-859")
-        tests.storePlates("pa 758 889")
-        tests.storePlates("wc 7852")
-
-        assert.deepEqual(tests.filtered('WC'), ['WC 7852']);
+        assert.deepEqual(await tests.findFromTown('2'), [
+            { "registration_numbers": "PA 1234" }]);
     });
 
 });

@@ -13,6 +13,23 @@ body {
     text-align: center;
 }
 
+.lastbuttons {
+    display: flex;
+    margin-left: 14em;
+}
+
+.error {
+    color: crimson;
+    font-size: 35px;
+    text-align: center;
+}
+
+.passed {
+    color: rgba(26, 128, 0, 0.692);
+    font-size: 35px;
+    text-align: center;
+}
+
 p {
     background: white;
     width: 50%;
@@ -47,12 +64,15 @@ ul {
     list-style-type: none;
 }
 
+.str {
+    display: flex;
+}
+
 li {
     border: solid;
     border-radius: 6px;
-    width: 15%;
     margin: 2px;
-    display: inline-block;
+    /* display:inline-flex; */
     padding: 5px;
     background: orange;
     text-align: center;
@@ -87,8 +107,6 @@ button span {
     display: inline-flex;
     margin-top: 70px;
 }
-
-
 
 .title {
     font-size: 25px;
@@ -163,6 +181,10 @@ select {
         transition-duration: 0.4s;
         text-align: center;
         font-family: 'Merienda', cursive;
+    }
+    .lastbuttons {
+        display: flex;
+        margin-left: 8em;
     }
 }
 

@@ -2,7 +2,17 @@
     <h1>Registration Number System</h1>
     <p>FORMAT: ONLY TAKE PLATES FROM CAPE TOWN(CA) & PRETORIA(PA) & WORCESTER(WC).
         eg. CA 123 456 Or CA 123-456 Or CA 1234 </p>
-    <span id="error"></span>
+    {{!-- <span id="error"></span> --}}
+
+    <div class="passed">
+        {{messages.infoIn}}
+    </div>
+    
+    <div class="error">
+        {{messages.infoRed}}
+    </div>
+
+
     <div class="adjust">
         <div class="section1">
             <form action="/reg_numbers" method="POST">
@@ -51,11 +61,12 @@
 </div>
 </form>
 
-<div>
+<div class="str">
     {{#each output}}
     <ul>
         <li>{{registration_numbers}}</li>
     </ul>
     {{/each}}
+
 </div>
 </div>

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const flash = require('express-flash');
 const session = require('express-session');
 const registrationNumbers = require("./registration");
-const routes = require('./routes')
+const routes = require('./routes');
 
 const app = express();
 

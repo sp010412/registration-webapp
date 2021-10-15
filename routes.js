@@ -1,4 +1,4 @@
-module.export = function (regInsta) {
+module.exports = function (regInsta) {
 
 
     async function home(req, res) {
@@ -83,7 +83,6 @@ module.export = function (regInsta) {
         show,
         showAll,
         reset,
-
     }
 
 

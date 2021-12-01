@@ -68,6 +68,11 @@ app.post('/next', async function (req, res) {
     res.render('stepOne');
 });
 
+app.post('/step2', async function (req, res) {
+
+    res.render('stepTwo');
+});
+
 
 let PORT = process.env.PORT || 2022;
 

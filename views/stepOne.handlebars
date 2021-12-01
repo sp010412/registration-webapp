@@ -1,8 +1,17 @@
 <h1>Step 1 Level 1</h1>
-<button type="button" onclick="init()">Start</button>
+
+<div class="success" id="success"> Yay! Correct, you can proceed to the next step!</div>
+
+<form action="/step2" method="POST">
+<button class="next" id='next' type="submit">Next step</button>
+</form>
+
+<button id="start" type="button" onclick="init()">Start</button>
+
+
 <div id="webcam-container"></div>
 <div id="label-container"></div>
-<button class = "next hide" type="button">Next step</button>
+
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
@@ -63,9 +72,13 @@
                 prediction[i].className + ": " + prediction[i].probability.toFixed(2);
             labelContainer.childNodes[i].innerHTML = classPrediction;
 
-            if (prediction[i].className == 'Triangle' && prediction[i].probability.toFixed(2) === '1.00') {
-                document.querySelector('.next').classList.remove('.hide')
-
+            if (prediction[i].className === 'Square' && prediction[i].probability.toFixed(2) === '1.00') {
+                document.querySelector('.next').classList.remove('next');
+                document.querySelector('.success').classList.remove('success');
+                document.getElementById('webcam-container').remove();
+                document.getElementById('label-container').remove();      
+                document.getElementById('start').remove();   
+                
             }
         }
     }

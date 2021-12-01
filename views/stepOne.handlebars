@@ -1,6 +1,13 @@
-module.exports = function registrationNumbers() {
+<h1>Step 1 Level 1</h1>
+<button type="button" onclick="init()">Start</button>
+<div id="webcam-container"></div>
+<div id="label-container"></div>
+<button class = "next hide" type="button">Next step</button>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
 
+<script type="text/javascript">
     // More API functions here:
     // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
@@ -50,18 +57,18 @@ module.exports = function registrationNumbers() {
     async function predict() {
         // predict can take in an image, video or canvas html element
         const prediction = await model.predict(webcam.canvas);
+
         for (let i = 0; i < maxPredictions; i++) {
             const classPrediction =
                 prediction[i].className + ": " + prediction[i].probability.toFixed(2);
             labelContainer.childNodes[i].innerHTML = classPrediction;
+
+            if (prediction[i].className == 'Triangle' && prediction[i].probability.toFixed(2) === '1.00') {
+                document.querySelector('.next').classList.remove('.hide')
+
+            }
         }
     }
 
 
-    return {
-        init,
-        loop,
-        predict,
-    }
-
-}
+</script>

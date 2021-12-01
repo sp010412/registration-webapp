@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Merienda&display=swap');
 body {
     text-decoration: none;
-    background: url(https://www.wallpapertip.com/wmimgs/129-1291608_audi-cars-wallpapers-full-hd-full-hd-audi.jpg) no-repeat center/cover;
+    background-color: aqua;
 }
 
 .container {
@@ -12,6 +12,9 @@ body {
     height: 90vh;
     text-align: center;
     margin-left: 7em;
+}
+.hide{
+    display: none;
 }
 
 .lastbuttons {

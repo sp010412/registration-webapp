@@ -14,6 +14,11 @@ const handlebarSetup = exphbs({
     layoutsDir: './views/layouts',
 });
 
+
+
+app.engine('handlebars', handlebarSetup);
+app.set('view engine', 'handlebars');
+
 const pg = require("pg");
 const Pool = pg.Pool;
 
@@ -33,9 +38,6 @@ const pool = new Pool({
         rejectUnauthorized: false
     }
 });
-
-app.engine('handlebars', handlebarSetup);
-app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 
 app.use(session({
@@ -46,7 +48,9 @@ app.use(session({
 app.use(flash());
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
 // parse application/json
 app.use(bodyParser.json())
 
@@ -55,15 +59,14 @@ const regInsta = registrationNumbers(pool);
 const Routes = routes(regInsta);
 
 
-app.get('/', Routes.home);
+app.get('/', async function (req, res) {
+    res.render('index')
+});
 
-app.post('/reg_numbers', Routes.actions);
+app.post('/next', async function (req, res) {
 
-app.post('/showButton', Routes.show);
-
-app.post('/showAllButton', Routes.showAll);
-
-app.post('/resetButton', Routes.reset);
+    res.render('stepOne');
+});
 
 
 let PORT = process.env.PORT || 2022;

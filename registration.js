@@ -1,67 +1,55 @@
-module.exports = function registrationNumbers() {
+module.exports = function registrationNumbers(existingPlates) {
 
+    var pool = existingPlates;
 
-    // More API functions here:
-    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+    //Adds registration numbers into the table
+    async function platesIn(regIn) {
+        if (regIn != '' && /^((CA|PA|WC)\s\d{3}\-\d{3})$|^((CA|PA|WC)\s\d{3}\s\d{3})$|^((CA|PA|WC)\s\d{4})$/.test(regIn)) {
+            let plate = regIn;
+            const db = await pool.query('SELECT registration_numbers FROM registrations WHERE registration_numbers = $1', [plate]);
+            let chart = plate.substring(0, 2);
+            var townId = await pool.query('SELECT id FROM towns WHERE town_str = $1', [chart]);
 
-    // the link to your model provided by Teachable Machine export panel
-    const URL = "https://teachablemachine.withgoogle.com/models/XvwGdp0yw/";
-
-    let model, webcam, labelContainer, maxPredictions;
-
-    // Load the image model and setup the webcam
-    async function init() {
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
-
-        console.log(modelURL)
-
-        console.log(metadataURL)
-
-        // load the model and metadata
-        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-        // or files from your local hard drive
-        // Note: the pose library adds "tmImage" object to your window (window.tmImage)
-        model = await tmImage.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
-
-        // Convenience function to setup a webcam
-        const flip = true; // whether to flip the webcam
-        webcam = new tmImage.Webcam(300, 300, flip); // width, height, flip
-        await webcam.setup(); // request access to the webcam
-        await webcam.play();
-        window.requestAnimationFrame(loop);
-
-        // append elements to the DOM
-        document.getElementById("webcam-container").appendChild(webcam.canvas);
-        labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) { // and class labels
-            labelContainer.appendChild(document.createElement("div"));
+            //first checks if the parameter exist
+            if (db.rowCount === 0) {
+                await pool.query('INSERT INTO registrations (registration_numbers, town_id) values ($1,$2)', [plate, townId.rows[0].id]);
+            }
         }
     }
 
-    async function loop() {
-        webcam.update(); // update the webcam frame
-        await predict();
-        window.requestAnimationFrame(loop);
-    }
-
-    // run the webcam image through the image model
-    async function predict() {
-        // predict can take in an image, video or canvas html element
-        const prediction = await model.predict(webcam.canvas);
-        for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-            labelContainer.childNodes[i].innerHTML = classPrediction;
+    async function dupli(regIn) {
+        if (regIn != '' && /^((CA|PA|WC)\s\d{3}\-\d{3})$|^((CA|PA|WC)\s\d{3}\s\d{3})$|^((CA|PA|WC)\s\d{4})$/.test(regIn)) {
+            let plate = regIn;
+            const db = await pool.query('SELECT registration_numbers FROM registrations WHERE registration_numbers = $1', [plate]);
+            return db
         }
     }
 
+    //Show all registrations
+
+    async function allRegistrations() {
+        const db = await pool.query('SELECT registration_numbers FROM registrations');
+        return db.rows;
+    }
+
+    //clearing database
+    async function clearTable() {
+        await pool.query("DELETE FROM registrations");
+    }
+
+    //filterng 
+    async function findFromTown(param) {
+        var townSelected = param;
+        filtered = await pool.query('SELECT registration_numbers FROM registrations WHERE town_id = $1', [townSelected]);
+        return filtered.rows
+    }
 
     return {
-        init,
-        loop,
-        predict,
+        platesIn,
+        allRegistrations,
+        clearTable,
+        findFromTown,
+        dupli
     }
 
 }
